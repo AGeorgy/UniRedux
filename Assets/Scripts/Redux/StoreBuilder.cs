@@ -16,6 +16,11 @@ namespace Redux
             _store = initialState;
         }
 
+        public SubReducer<TState, TFilteredState> StartSubReducer<TFilteredState>(Func<IObservable<TState>, IObservable<TFilteredState>> filter)
+        {
+            return new SubReducer<TState, TFilteredState>(this, filter);
+        }
+
         public StoreBuilder<TState> AddReducer<TFilteredState, TAction>(
             Func<IObservable<TState>, IObservable<TFilteredState>> filter,
             Action<TFilteredState, TAction> reducer)

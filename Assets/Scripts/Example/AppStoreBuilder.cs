@@ -14,15 +14,17 @@ namespace Example
         public static IFilterAndDispatcher<AppState> Build(out IDisposable disposable)
         {
             return StoreBuilder<AppState>.Create(AppState.InitialState)
-                // Counter
-                .AddReducer<CounterState, IncrementAction>(FilterCounterState, CounterIncrementReducer)
-                .AddReducer<CounterState, DecrementAction>(FilterCounterState, CounterDecrementReducer)
+                .StartSubReducer(FilterCounterState) // Counter
+                    .AddReducer<IncrementAction>(CounterIncrementReducer)
+                    .AddReducer<DecrementAction>(CounterDecrementReducer)
+                .EndSubReducer()
             
-                // ToDo
-                .AddReducer<ToDoState, CreateTodoItemAction>(FilterToDoState, CreateToDoItemReducer)
-                .AddReducer<ToDoState, RemoveTodoItemAction>(FilterToDoState, RemoveToDoItemReducer)
-                .AddReducer<ToDoState, CompleteTodoItemAction>(FilterToDoState, CompleteToDoItemReducer)
-                .AddReducer<ToDoState, ClearTodoItemsAction>(FilterToDoState, ClearToDoItemsReducer)
+                .StartSubReducer(FilterToDoState) // ToDo
+                    .AddReducer<CreateTodoItemAction>(CreateToDoItemReducer)
+                    .AddReducer<RemoveTodoItemAction>(RemoveToDoItemReducer)
+                    .AddReducer<CompleteTodoItemAction>(CompleteToDoItemReducer)
+                    .AddReducer<ClearTodoItemsAction>(ClearToDoItemsReducer)
+                .EndSubReducer()
             
                 //.AddEffect<ClearTodoItemsAction, CreateTodoItemAction>(VerifayTransactionEffect, _playerStore)
                 .Build(out disposable);
