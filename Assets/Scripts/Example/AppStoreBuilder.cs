@@ -6,12 +6,13 @@ using static Example.Counter.Filters;
 using static Example.Counter.Reducers;
 using static Example.ToDo.Filters;
 using static Example.ToDo.Reducers;
+using static Example.ToDo.SideEffects;
 
 namespace Example
 {
     public static class AppStoreBuilder
     {
-        public static IFilterAndDispatcher<AppState> Build(out IDisposable disposable)
+        public static IFilterAndDispatcher<AppState> Build(PlayerPrefsService playerPrefsService, out IDisposable disposable)
         {
             return StoreBuilder<AppState>.Create(AppState.InitialState)
                 .StartSubReducer(FilterCounterState) // Counter
@@ -20,13 +21,14 @@ namespace Example
                 .EndSubReducer()
             
                 .StartSubReducer(FilterToDoState) // ToDo
-                    .AddReducer<CreateTodoItemAction>(CreateToDoItemReducer)
+                    .AddReducer<CreateTodoItemAction, StoreToDoItemsAction>(CreateToDoItemReducer)
                     .AddReducer<RemoveTodoItemAction>(RemoveToDoItemReducer)
                     .AddReducer<CompleteTodoItemAction>(CompleteToDoItemReducer)
-                    .AddReducer<ClearTodoItemsAction>(ClearToDoItemsReducer)
+                    .AddReducer<ClearTodoItemsSucceedAction>(ClearToDoItemsReducer)
                 .EndSubReducer()
-            
-                //.AddEffect<ClearTodoItemsAction, CreateTodoItemAction>(VerifayTransactionEffect, _playerStore)
+                .AddSideEffect<ClearTodoItemsAction, PlayerPrefsService, ClearTodoItemsSucceedAction>(ClearToDoItemsEffect, playerPrefsService)
+                .AddSideEffect<StoreToDoItemsAction, PlayerPrefsService>(StoreToDoItemsEffect, playerPrefsService)
+                
                 .Build(out disposable);
         }
     }

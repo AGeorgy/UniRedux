@@ -34,6 +34,11 @@ namespace Example.ToDo
             Id = Guid.Empty,
             Content = string.Empty
         };
+
+        public override string ToString()
+        {
+            return Id + " ^ " + Content + " ^ " + Completed;
+        }
     }
 
     public enum TodoFilter

@@ -4,11 +4,12 @@ namespace Example.ToDo
 {
     public static class Reducers
     {
-        public static void CreateToDoItemReducer(ToDoState state, CreateTodoItemAction action)
+        public static StoreToDoItemsAction CreateToDoItemReducer(ToDoState state, CreateTodoItemAction action)
         {
             var item = new TodoItem {Content = action.Content, Id = Guid.NewGuid()};
             state.Items.Add(item);
             state.ItemAdded = item;
+            return new StoreToDoItemsAction{Items = state.Items.ToArray()};
         }
 
         public static void RemoveToDoItemReducer(ToDoState state, RemoveTodoItemAction action)
@@ -32,7 +33,7 @@ namespace Example.ToDo
             }
         }
 
-        public static void ClearToDoItemsReducer(ToDoState state, ClearTodoItemsAction action)
+        public static void ClearToDoItemsReducer(ToDoState state, ClearTodoItemsSucceedAction action)
         {
             state.Items.Clear();
         }

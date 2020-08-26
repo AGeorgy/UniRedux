@@ -42,6 +42,20 @@ namespace Redux
                 .AddTo(_disposables);
         }
 
+        public void AddReducer<TFilteredState, TInputAction, TOutputAction>(Func<IObservable<TState>, IObservable<TFilteredState>> filter, Func<TFilteredState, TInputAction, TOutputAction> reducer)
+        {
+            _dispatcher.Receive<TInputAction>()
+                .Do(_ => _reduceStateSubject.OnNext(_state))
+                .Zip(filter(_reduceStateSubject), (lhs, rhs) => new {Action = lhs, FilteredState = rhs})
+                .Subscribe(filteredStateAndAction =>
+                {
+                    var action = reducer(filteredStateAndAction.FilteredState, filteredStateAndAction.Action);
+                    _filterStateSubject.OnNext(_state);
+                    Dispatch(action);
+                })
+                .AddTo(_disposables);
+        }
+
         public void AddReducer<TFilteredState, TAction>(Func<IObservable<TState>, IObservable<TFilteredState>> filter, Func<TFilteredState, TAction, IObservable<TFilteredState>> reducer)
         {
             _dispatcher.Receive<TAction>()
@@ -51,6 +65,24 @@ namespace Redux
                 .Subscribe(_ =>
                 {
                     _filterStateSubject.OnNext(_state);
+                })
+                .AddTo(_disposables);
+        }
+
+        public void AddSideEffect<TService, TInputAction>(Action<TService, TInputAction> sideEffect, TService service)
+        {
+            _dispatcher.Receive<TInputAction>()
+                .Subscribe(action => sideEffect(service, action))
+                .AddTo(_disposables);
+        }
+
+        public void AddSideEffect<TService, TInputAction, TOutputAction>(Func<TService, TInputAction, TOutputAction> sideEffect, TService service)
+        {
+            _dispatcher.Receive<TInputAction>()
+                .Subscribe(action =>
+                {
+                    var outputAction = sideEffect(service, action);
+                    Dispatch(outputAction);
                 })
                 .AddTo(_disposables);
         }

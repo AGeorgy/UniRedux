@@ -6,6 +6,7 @@
     }
     
     public struct ClearTodoItemsAction { }
+    public struct ClearTodoItemsSucceedAction { }
 
     public struct RemoveTodoItemAction
     {
@@ -15,6 +16,11 @@
     public struct CompleteTodoItemAction
     {
         public TodoItem Item { get; set; }
+    }
+
+    public struct StoreToDoItemsAction
+    {
+        public TodoItem[] Items { get; set; }
     }
     
     /*public struct SetFilterAction

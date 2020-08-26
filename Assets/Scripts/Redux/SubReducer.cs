@@ -13,13 +13,19 @@ namespace Redux
             _filter = filter;
         }
 
-        public SubReducer<TState, TFilteredState> AddReducer<TAction>(Action<TFilteredState, TAction> reducer)
+        public SubReducer<TState, TFilteredState> AddReducer<TInputAction>(Action<TFilteredState, TInputAction> reducer)
         {
             _storeBuilder.AddReducer(_filter, reducer);
             return this;
         }
 
-        public SubReducer<TState, TFilteredState> AddReducer<TAction>(Func<TFilteredState, TAction, IObservable<TFilteredState>> reducer)
+        public SubReducer<TState, TFilteredState> AddReducer<TInputAction, TOutputAction>(Func<TFilteredState, TInputAction, TOutputAction> reducer)
+        {
+            _storeBuilder.AddReducer(_filter, reducer);
+            return this;
+        }
+
+        public SubReducer<TState, TFilteredState> AddReducer<TInputAction>(Func<TFilteredState, TInputAction, IObservable<TFilteredState>> reducer)
         {
             _storeBuilder.AddReducer(_filter, reducer);
             return this;
