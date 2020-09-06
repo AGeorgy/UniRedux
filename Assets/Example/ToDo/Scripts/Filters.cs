@@ -1,7 +1,7 @@
 ﻿using System;
 using UniRx;
 
-namespace Example.ToDo
+namespace Example.ToDo.Scripts
 {
     public static class Filters
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Example
+namespace Example.Services
 {
     public class PlayerPrefsService
     {

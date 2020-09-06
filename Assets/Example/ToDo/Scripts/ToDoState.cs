@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Example.ToDo
+namespace Example.ToDo.Scripts
 {
     public class ToDoState
     {

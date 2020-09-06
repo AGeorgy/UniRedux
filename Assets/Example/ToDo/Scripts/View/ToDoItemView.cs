@@ -4,7 +4,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Example.ToDo
+namespace Example.ToDo.Scripts.View
 {
     public class ToDoItemView : MonoBehaviour
     {

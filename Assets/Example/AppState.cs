@@ -1,5 +1,7 @@
 ﻿using Example.Counter;
+using Example.Counter.Scripts;
 using Example.ToDo;
+using Example.ToDo.Scripts;
 
 namespace Example
 {

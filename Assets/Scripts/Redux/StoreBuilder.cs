@@ -29,11 +29,12 @@ namespace Redux
             return this;
         }
 
-        public StoreBuilder<TState> AddReducer<TFilteredState, TInputAction, TOutputAction>(
+        public StoreBuilder<TState> AddReducer<TFilteredState, TAction, TService>(
             Func<IObservable<TState>, IObservable<TFilteredState>> filter,
-            Func<TFilteredState, TInputAction, TOutputAction> reducer)
+            Action<TFilteredState, TAction, TService> reducer,
+            TService service)
         {
-            _store.AddReducer(filter, reducer);
+            _store.AddReducer(filter, reducer, service);
             return this;
         }
 
@@ -45,15 +46,12 @@ namespace Redux
             return this;
         }
 
-        public StoreBuilder<TState> AddSideEffect<TAction, TService>(Action<TService, TAction> sideEffect, TService service)
+        public StoreBuilder<TState> AddReducer<TFilteredState, TAction, TService>(
+            Func<IObservable<TState>, IObservable<TFilteredState>> filter,
+            Func<TFilteredState, TAction, TService, IObservable<TFilteredState>> reducer,
+            TService service)
         {
-            _store.AddSideEffect(sideEffect, service);
-            return this;
-        }
-
-        public StoreBuilder<TState> AddSideEffect<TAction, TService, TOutputAction>(Func<TService, TAction, TOutputAction> sideEffect, TService service)
-        {
-            _store.AddSideEffect(sideEffect, service);
+            _store.AddReducer(filter, reducer, service);
             return this;
         }
 

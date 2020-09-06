@@ -3,9 +3,9 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using static Example.Main;
-using static Example.Counter.Filters;
+using static Example.Counter.Scripts.Filters;
 
-namespace Example.Counter
+namespace Example.Counter.Scripts.View
 {
     public class CounterView : MonoBehaviour
     {

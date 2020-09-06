@@ -1,7 +1,7 @@
 ﻿using System;
 using UniRx;
 
-namespace Example.Counter
+namespace Example.Counter.Scripts
 {
     public static class Reducers
     {

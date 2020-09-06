@@ -1,4 +1,4 @@
-﻿namespace Example.Counter
+﻿namespace Example.Counter.Scripts
 {
     public struct IncrementAction { }
     public struct DecrementAction

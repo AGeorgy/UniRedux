@@ -19,15 +19,21 @@ namespace Redux
             return this;
         }
 
-        public SubReducer<TState, TFilteredState> AddReducer<TInputAction, TOutputAction>(Func<TFilteredState, TInputAction, TOutputAction> reducer)
+        public SubReducer<TState, TFilteredState> AddReducer<TInputAction, TService>(Action<TFilteredState, TInputAction, TService> reducer, TService service)
         {
-            _storeBuilder.AddReducer(_filter, reducer);
+            _storeBuilder.AddReducer(_filter, reducer, service);
             return this;
         }
 
         public SubReducer<TState, TFilteredState> AddReducer<TInputAction>(Func<TFilteredState, TInputAction, IObservable<TFilteredState>> reducer)
         {
             _storeBuilder.AddReducer(_filter, reducer);
+            return this;
+        }
+
+        public SubReducer<TState, TFilteredState> AddReducer<TInputAction, TService>(Func<TFilteredState, TInputAction, TService, IObservable<TFilteredState>> reducer, TService service)
+        {
+            _storeBuilder.AddReducer(_filter, reducer, service);
             return this;
         }
 

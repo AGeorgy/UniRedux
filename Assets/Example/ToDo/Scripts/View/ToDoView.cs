@@ -4,9 +4,9 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using static Example.Main;
-using static Example.ToDo.Filters;
+using static Example.ToDo.Scripts.Filters;
 
-namespace Example.ToDo
+namespace Example.ToDo.Scripts.View
 {
     public class ToDoView : MonoBehaviour
     {

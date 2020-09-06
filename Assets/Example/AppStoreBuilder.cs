@@ -1,12 +1,14 @@
 ﻿using System;
 using Example.Counter;
+using Example.Counter.Scripts;
+using Example.Services;
 using Example.ToDo;
+using Example.ToDo.Scripts;
 using Redux;
-using static Example.Counter.Filters;
-using static Example.Counter.Reducers;
-using static Example.ToDo.Filters;
-using static Example.ToDo.Reducers;
-using static Example.ToDo.SideEffects;
+using static Example.Counter.Scripts.Filters;
+using static Example.Counter.Scripts.Reducers;
+using static Example.ToDo.Scripts.Filters;
+using static Example.ToDo.Scripts.Reducers;
 
 namespace Example
 {
@@ -21,13 +23,11 @@ namespace Example
                 .EndSubReducer()
             
                 .StartSubReducer(FilterToDoState) // ToDo
-                    .AddReducer<CreateTodoItemAction, StoreToDoItemsAction>(CreateToDoItemReducer)
+                    .AddReducer<CreateTodoItemAction, PlayerPrefsService>(CreateToDoItemReducer, playerPrefsService)
                     .AddReducer<RemoveTodoItemAction>(RemoveToDoItemReducer)
                     .AddReducer<CompleteTodoItemAction>(CompleteToDoItemReducer)
-                    .AddReducer<ClearTodoItemsSucceedAction>(ClearToDoItemsReducer)
+                    .AddReducer<ClearTodoItemsAction, PlayerPrefsService>(ClearToDoItemsReducer, playerPrefsService)
                 .EndSubReducer()
-                .AddSideEffect<ClearTodoItemsAction, PlayerPrefsService, ClearTodoItemsSucceedAction>(ClearToDoItemsEffect, playerPrefsService)
-                .AddSideEffect<StoreToDoItemsAction, PlayerPrefsService>(StoreToDoItemsEffect, playerPrefsService)
                 
                 .Build(out disposable);
         }

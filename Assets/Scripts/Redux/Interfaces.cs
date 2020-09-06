@@ -12,15 +12,14 @@ namespace Redux
         void AddReducer<TFilteredState, TAction>(Func<IObservable<TState>, IObservable<TFilteredState>> filter,
             Action<TFilteredState, TAction> reducer);
         
-        void AddReducer<TFilteredState, TInputAction, TOutputAction>(Func<IObservable<TState>, IObservable<TFilteredState>> filter,
-            Func<TFilteredState, TInputAction, TOutputAction> reducer);
+        void AddReducer<TFilteredState, TAction, TService>(Func<IObservable<TState>, IObservable<TFilteredState>> filter,
+            Action<TFilteredState, TAction, TService> reducer, TService service);
         
         void AddReducer<TFilteredState, TAction>(Func<IObservable<TState>, IObservable<TFilteredState>> filter,
             Func<TFilteredState, TAction, IObservable<TFilteredState>> reducer);
         
-        void AddSideEffect<TService, TInputAction>(Action<TService, TInputAction> sideEffect, TService service);
-        
-        void AddSideEffect<TService, TInputAction, TOutputAction>(Func<TService, TInputAction, TOutputAction> sideEffect, TService service);
+        void AddReducer<TFilteredState, TAction, TService>(Func<IObservable<TState>, IObservable<TFilteredState>> filter,
+            Func<TFilteredState, TAction, TService, IObservable<TFilteredState>> reducer, TService service);
     }
     
     public interface IFilter<out TState>

@@ -1,4 +1,4 @@
-﻿namespace Example.Counter
+﻿namespace Example.Counter.Scripts
 {
     public class CounterState
     {

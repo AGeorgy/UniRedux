@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Linq;
+using Example.Services;
 
-namespace Example.ToDo
+namespace Example.ToDo.Scripts
 {
     public static class Reducers
     {
-        public static StoreToDoItemsAction CreateToDoItemReducer(ToDoState state, CreateTodoItemAction action)
+        private const string TODO_ITEMS = "ToDO#Items";
+        public static void CreateToDoItemReducer(ToDoState state, CreateTodoItemAction action, PlayerPrefsService playerPrefsService)
         {
             var item = new TodoItem {Content = action.Content, Id = Guid.NewGuid()};
             state.Items.Add(item);
             state.ItemAdded = item;
-            return new StoreToDoItemsAction{Items = state.Items.ToArray()};
+            
+            var storedString = state.Items.Aggregate(string.Empty, (current, todoItem) => current + (todoItem + " ~ "));
+            playerPrefsService.Store(TODO_ITEMS, storedString);
         }
 
         public static void RemoveToDoItemReducer(ToDoState state, RemoveTodoItemAction action)
@@ -33,9 +38,10 @@ namespace Example.ToDo
             }
         }
 
-        public static void ClearToDoItemsReducer(ToDoState state, ClearTodoItemsSucceedAction action)
+        public static void ClearToDoItemsReducer(ToDoState state, ClearTodoItemsAction action, PlayerPrefsService playerPrefsService)
         {
             state.Items.Clear();
+            playerPrefsService.Clear(TODO_ITEMS);
         }
     }
 }
