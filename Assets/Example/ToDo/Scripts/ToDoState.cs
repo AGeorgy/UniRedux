@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Example.ToDo.Scripts
 {
+    [Serializable]
     public class ToDoState
     {
         public TodoItem ItemAdded { get; set; }
@@ -22,6 +23,7 @@ namespace Example.ToDo.Scripts
             };
     }
     
+    [Serializable]
     public struct TodoItem
     {
         public Guid Id { get; set; }

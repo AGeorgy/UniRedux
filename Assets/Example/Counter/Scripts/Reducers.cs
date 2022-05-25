@@ -1,19 +1,15 @@
-﻿using System;
-using UniRx;
-
-namespace Example.Counter.Scripts
+﻿namespace Example.Counter.Scripts
 {
     public static class Reducers
     {
-        public static void CounterIncrementReducer(CounterState state, IncrementAction action)
+        public static void CounterIncrementReducer(AppState state, IncrementAction action)
         {
-            state.Count++;
+            state.Counter.Count++;
         }
 
-        public static IObservable<CounterState> CounterDecrementReducer(CounterState input, DecrementAction action)
+        public static void CounterDecrementReducer(AppState state, DecrementAction action)
         {
-            return Observable.Return(input)
-                .Do(state => { state.Count -= action.Value; });
+            state.Counter.Count -= action.Value;
         }
     }
 }

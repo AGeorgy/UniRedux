@@ -1,6 +1,5 @@
 ﻿using System;
 using TMPro;
-using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +7,7 @@ namespace Example.ToDo.Scripts.View
 {
     public class ToDoItemView : MonoBehaviour
     {
-        public ReactiveProperty<TodoItem> Model { get; } = new ReactiveProperty<TodoItem>();
+        /*public ReactiveProperty<TodoItem> Model { get; } = new ReactiveProperty<TodoItem>();
         public IObservable<TodoItem> OnRemoveAsObservable => _removeSubject.AsObservable();
         public IObservable<TodoItem> OnCompleteAsObservable => _completeSubject.AsObservable();
         
@@ -47,6 +46,6 @@ namespace Example.ToDo.Scripts.View
         private void OnDestroy()
         {
             _disposables.Dispose();
-        }
+        }*/
     }
 }

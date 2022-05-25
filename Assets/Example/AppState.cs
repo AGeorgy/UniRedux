@@ -1,10 +1,10 @@
-﻿using Example.Counter;
+﻿using System;
 using Example.Counter.Scripts;
-using Example.ToDo;
 using Example.ToDo.Scripts;
 
 namespace Example
 {
+    [Serializable]
     public class AppState
     {
         public CounterState Counter { get; private set; }

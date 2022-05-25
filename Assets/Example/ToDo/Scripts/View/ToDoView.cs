@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
-using static Example.Main;
-using static Example.ToDo.Scripts.Filters;
 
 namespace Example.ToDo.Scripts.View
 {
     public class ToDoView : MonoBehaviour
     {
-        [SerializeField] private InputField _toDoInput;
+        /*[SerializeField] private InputField _toDoInput;
         [SerializeField] private Button _addButton;
         [SerializeField] private Button _clearButton;
         [SerializeField] private ScrollRect _todoList;
@@ -94,7 +91,7 @@ namespace Example.ToDo.Scripts.View
                     view.Model.Value = item;
                 })
                 .AddTo(_disposables);
-        }
+        }*/
 
     }
 }

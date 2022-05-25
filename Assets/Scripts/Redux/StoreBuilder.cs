@@ -1,65 +1,80 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Redux
 {
-    public class StoreBuilder<TState> where TState : class
+    public class StoreBuilder
     {
-        private readonly IReducerFilterDispatcherAndStore<TState> _store;
+        private readonly Dictionary<Type, object> _stores;
 
-        public static StoreBuilder<TState> Create(TState initialState)
+        public StoreBuilder()
         {
-            return new StoreBuilder<TState>(new Store<TState>(initialState));
+            _stores = new Dictionary<Type, object>();
         }
 
-        private StoreBuilder(IReducerFilterDispatcherAndStore<TState> initialState)
+        public IStateBuilder<TState> AddState<TState>(TState initialState)
         {
-            _store = initialState;
+            return new StateBuilder<TState>(this, initialState);
         }
 
-        public SubReducer<TState, TFilteredState> StartSubReducer<TFilteredState>(Func<IObservable<TState>, IObservable<TFilteredState>> filter)
+        public IStoreProvider BuildStore()
         {
-            return new SubReducer<TState, TFilteredState>(this, filter);
+            return new StoreProvider(_stores);
         }
 
-        public StoreBuilder<TState> AddReducer<TFilteredState, TAction>(
-            Func<IObservable<TState>, IObservable<TFilteredState>> filter,
-            Action<TFilteredState, TAction> reducer)
+        private void BuildState(Type type, object store)
         {
-            _store.AddReducer(filter, reducer);
-            return this;
+            _stores.Add(type, store);
         }
 
-        public StoreBuilder<TState> AddReducer<TFilteredState, TAction, TService>(
-            Func<IObservable<TState>, IObservable<TFilteredState>> filter,
-            Action<TFilteredState, TAction, TService> reducer,
-            TService service)
+        private class StateBuilder<TState> : IStateBuilder<TState>
         {
-            _store.AddReducer(filter, reducer, service);
-            return this;
-        }
+            private readonly TState _state;
+            private readonly Dictionary<Type, object> _reducers;
+            private readonly StoreBuilder _storeBuilder;
 
-        public StoreBuilder<TState> AddReducer<TFilteredState, TAction>(
-            Func<IObservable<TState>, IObservable<TFilteredState>> filter,
-            Func<TFilteredState, TAction, IObservable<TFilteredState>> reducer)
-        {
-            _store.AddReducer(filter, reducer);
-            return this;
-        }
+            public StateBuilder(StoreBuilder storeBuilder, TState initialState)
+            {
+                _storeBuilder = storeBuilder;
+                _state = initialState;
+                _reducers = new Dictionary<Type, object>();
+            }
 
-        public StoreBuilder<TState> AddReducer<TFilteredState, TAction, TService>(
-            Func<IObservable<TState>, IObservable<TFilteredState>> filter,
-            Func<TFilteredState, TAction, TService, IObservable<TFilteredState>> reducer,
-            TService service)
-        {
-            _store.AddReducer(filter, reducer, service);
-            return this;
-        }
+            public IStateBuilder<TState> AddReducer<TAction>(Action<TState, TAction> reducer)
+            {
+                _reducers.Add(typeof(TAction), reducer);
+                return this;
+            }
 
-        public IFilterAndDispatcher<TState> Build(out IDisposable disposable)
+            public StoreBuilder Build()
+            {
+                if (_reducers.Count > 0)
+                {
+                    _storeBuilder.BuildState(typeof(TState), new Store<TState>(_state, _reducers));
+                }
+
+                return _storeBuilder;
+            }
+        }
+        
+        private class StoreProvider : IStoreProvider
         {
-            _store.Dispatch(new InitializeStoreAction());
-            disposable = _store;
-            return _store;
+            private Dictionary<Type, object> _stores;
+
+            public StoreProvider(Dictionary<Type, object> stores)
+            {
+                _stores = stores;
+            }
+
+            public IDispatcherSelector<TStoreState> GetStore<TStoreState>()
+            {
+                if (_stores.TryGetValue(typeof(TStoreState), out var store))
+                {
+                    return (Store<TStoreState>) store;
+                }
+
+                return null;
+            }
         }
     }
 }

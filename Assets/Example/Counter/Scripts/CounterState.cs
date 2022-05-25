@@ -1,5 +1,8 @@
-﻿namespace Example.Counter.Scripts
+﻿using System;
+
+namespace Example.Counter.Scripts
 {
+    [Serializable]
     public class CounterState
     {
         public int Count { get; set; }

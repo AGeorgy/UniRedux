@@ -1,18 +1,12 @@
 ﻿using System;
-using UniRx;
 
 namespace Example.ToDo.Scripts
 {
-    public static class Filters
+    public static class Selectors
     {
-        public static IObservable<ToDoState> FilterToDoState(IObservable<AppState> input)
+        /*public static TodoItem FilterItemAdded(AppState state)
         {
-            return input.Select(state => state.ToDo);
-        }
-        
-        public static IObservable<TodoItem> FilterItemAdded(IObservable<AppState> input)
-        {
-            return FilterToDoState(input)
+            return state.ToDo.Items
                 .Select(state => state.ItemAdded)
                 .DistinctUntilChanged()
                 .Where(item => item.Id != Guid.Empty);
@@ -41,6 +35,6 @@ namespace Example.ToDo.Scripts
                 .DistinctUntilChanged()
                 .Where(items => items == 0)
                 .AsUnitObservable();
-        }
+        }*/
     }
 }
