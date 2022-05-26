@@ -21,6 +21,8 @@ namespace Example.ToDo.Scripts
                 ItemRemoved = TodoItem.Empty,
                 ItemCompleted = TodoItem.Empty
             };
+
+        private ToDoState() { }
     }
     
     [Serializable]

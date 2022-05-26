@@ -1,46 +1,55 @@
 using System;
 
-namespace Redux
+namespace UniRedux.Redux
 {
-    public class SelectObservable<TState, TPartialState> : IObservable<TPartialState>, IObserver<TState>
+    public class SelectObservable<TState, TPartialState> : IReduxSelectObservable<TPartialState>, IReduxObserver<TState>
     {
-        private readonly IObservable<TState> _source;
+        private readonly IReduxObservable<TState> _source;
         private readonly Func<TState, TPartialState> _selector;
-        private IObserver<TPartialState> _observer;
+        private IReduxObserver<TPartialState> _observer;
         private TPartialState _lastState;
 
-        public SelectObservable(IObservable<TState> source, Func<TState, TPartialState> selector)
+        public SelectObservable(IReduxObservable<TState> source, Func<TState, TPartialState> selector)
         {
             _lastState = default;
             _source = source;
             _selector = selector;
         }
 
-        public IDisposable Subscribe(IObserver<TPartialState> observer)
+        public IDisposable Subscribe(IReduxObserver<TPartialState> observer)
         {
             _observer = observer;
             return _source.Subscribe(this);
         }
-
-        public void OnCompleted()
+        
+        public IReduxSelectObservable<TNewPartialState> Select<TNewPartialState>(Func<TPartialState, TNewPartialState> selector)
         {
-            _observer?.OnCompleted();
+            return new SelectObservable<TPartialState, TNewPartialState>(this, selector);
         }
 
-        public void OnError(Exception error)
+        public void Invoke(TState value)
         {
-            _observer?.OnError(error);
-        }
-
-        public void OnNext(TState value)
-        {
-            if(_selector == null || _observer == null) return;
-            var state = _selector.Invoke(value);
-            if (!Equals(_lastState, state))
+            if (IsValid)
             {
-                _lastState = state;
-                _observer.OnNext(_lastState);
+                var state = _selector.Invoke(value);
+                if (!Equals(_lastState, state))
+                {
+                    _lastState = state;
+                    _observer.Invoke(_lastState);
+                }
             }
         }
+
+        public void ForceInvoke(TState value)
+        {
+            if (IsValid)
+            {
+                var state = _selector.Invoke(value);
+                _lastState = state;
+                _observer.ForceInvoke(_lastState);
+            }
+        }
+
+        private bool IsValid => _selector != null && _observer != null;
     }
 }

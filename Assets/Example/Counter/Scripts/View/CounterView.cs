@@ -1,6 +1,6 @@
 ﻿using System;
-using Redux;
 using TMPro;
+using UniRedux.Redux;
 using UnityEngine;
 using UnityEngine.UI;
 using static Example.Counter.Scripts.Selectors;
@@ -18,16 +18,20 @@ namespace Example.Counter.Scripts.View
 
         private void Start()
         {
-            _disposable = GlobalStore.GetStore<AppState>().Select(CountSelector)
-                .Subscribe(count => _counterText.text = count.ToString());
+            _disposable = GlobalStore.Select<CounterState, Counter>(CounterSelector).Select(CountSelector)
+            //_disposable = GlobalStore.GetStore<CounterState>().Select(CounterSelector).Select(CountSelector)
+                //.Select(FullCountSelector)
+                .Subscribe(DisplayCount);
 
             _incrementButton.onClick.AddListener(OnIncrement);
             _decrementButton.onClick.AddListener(OnDecrement);
         }
 
-        private void OnIncrement() => GlobalStore.GetStore<AppState>().Dispatch<IncrementAction>();
+        private void DisplayCount(int count) => _counterText.text = count.ToString();
 
-        private void OnDecrement() => GlobalStore.GetStore<AppState>().Dispatch(new DecrementAction{Value = _decrementValue});
+        private void OnIncrement() => GlobalStore.Dispatch<CounterState, IncrementAction>();
+
+        private void OnDecrement() => GlobalStore.GetStore<CounterState>().Dispatch(new DecrementAction{Value = _decrementValue});
 
         private void OnDestroy()
         {

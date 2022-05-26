@@ -1,43 +1,34 @@
 using System;
 using System.Collections.Generic;
 
-namespace Redux
+namespace UniRedux.Redux
 {
-    public class StateProvider<TState> : IObserver<TState>, IObservable<TState>
+    public class StateProvider<TState> : IReduxObservable<TState>
     {
-        private readonly List<IObserver<TState>> _observers;
+        private readonly List<IReduxObserver<TState>> _observers;
         private readonly object _lockObject = new();
+        private readonly TState _state;
 
-        public StateProvider()
+        public StateProvider(TState state)
         {
-            _observers = new List<IObserver<TState>>();
+            _state = state;
+            _observers = new List<IReduxObserver<TState>>();
         }
 
-        public void OnCompleted()
-        {
-            foreach (var observer in _observers)
-            {
-                observer.OnCompleted();
-            }
-        }
-
-        public void OnError(Exception error)
+        public void Invoke(TState value)
         {
             foreach (var observer in _observers)
             {
-                observer.OnError(error);
+                observer.Invoke(value);
             }
         }
 
-        public void OnNext(TState value)
+        private void ForceInvoke(IReduxObserver<TState> observer)
         {
-            foreach (var observer in _observers)
-            {
-                observer.OnNext(value);
-            }
+            observer.ForceInvoke(_state);
         }
 
-        public IDisposable Subscribe(IObserver<TState> observer)
+        public IDisposable Subscribe(IReduxObserver<TState> observer)
         {
             if (!_observers.Contains(observer))
             {
@@ -51,12 +42,13 @@ namespace Redux
         {
             private bool _isDisposed;
             private StateProvider<TState> _stateProvider;
-            private IObserver<TState> _observer;
+            private IReduxObserver<TState> _observer;
 
-            public Subscription(StateProvider<TState> stateProvider, IObserver<TState> observer)
+            public Subscription(StateProvider<TState> stateProvider, IReduxObserver<TState> observer)
             {
                 _stateProvider = stateProvider;
                 _observer = observer;
+                _stateProvider.ForceInvoke(_observer);
             }
 
             public void Dispose()

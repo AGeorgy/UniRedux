@@ -1,6 +1,6 @@
 ﻿using Example.Counter.Scripts;
 using Example.ToDo.Scripts;
-using Redux;
+using UniRedux.Redux;
 using UnityEngine;
 using static Example.Counter.Scripts.Reducers;
 using static Example.ToDo.Scripts.Reducers;
@@ -14,10 +14,12 @@ namespace Example
         {
             var builder = new StoreBuilder();
             builder
-                .AddState(AppState.InitialState)
+                .AddState(CounterState.InitialState)
                 .AddReducer<IncrementAction>(CounterIncrementReducer)
                 .AddReducer<DecrementAction>(CounterDecrementReducer)
+                .Build()
 
+                .AddState(ToDoState.InitialState)
                 //.AddReducer<CreateTodoItemAction, PlayerPrefsService>(CreateToDoItemReducer, playerPrefsService)
                 .AddReducer<RemoveTodoItemAction>(RemoveToDoItemReducer)
                 .AddReducer<CompleteTodoItemAction>(CompleteToDoItemReducer)

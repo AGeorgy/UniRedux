@@ -17,24 +17,24 @@ namespace Example.ToDo.Scripts
             playerPrefsService.Store(TODO_ITEMS, storedString);
         }
 
-        public static void RemoveToDoItemReducer(AppState state, RemoveTodoItemAction action)
+        public static void RemoveToDoItemReducer(ToDoState state, RemoveTodoItemAction action)
         {
-            if (state.ToDo.Items.Contains(action.Item))
+            if (state.Items.Contains(action.Item))
             {
-                state.ToDo.Items.Remove(action.Item);
-                state.ToDo.ItemRemoved = action.Item;
+                state.Items.Remove(action.Item);
+                state.ItemRemoved = action.Item;
             }
         }
 
-        public static void CompleteToDoItemReducer(AppState state, CompleteTodoItemAction action)
+        public static void CompleteToDoItemReducer(ToDoState state, CompleteTodoItemAction action)
         {
-            if (state.ToDo.Items.Contains(action.Item))
+            if (state.Items.Contains(action.Item))
             {
-                var index = state.ToDo.Items.FindIndex(x => x.Id == action.Item.Id);
-                var item = state.ToDo.Items[index];
+                var index = state.Items.FindIndex(x => x.Id == action.Item.Id);
+                var item = state.Items[index];
                 item.Completed = !item.Completed;
-                state.ToDo.Items[index] = item;
-                state.ToDo.ItemCompleted = item;
+                state.Items[index] = item;
+                state.ItemCompleted = item;
             }
         }
 

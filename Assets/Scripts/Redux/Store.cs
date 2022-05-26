@@ -4,21 +4,19 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Redux
+namespace UniRedux.Redux
 {
     public class Store<TState> : IDispatcherSelector<TState>
     {
-        public TState State => _state;
-
         private readonly Dictionary<Type,object> _reducers;
         private readonly StateProvider<TState> _stateProvider;
         private TState _state;
 
         public Store(TState initialState, Dictionary<Type, object> reducers)
         {
-            _stateProvider = new StateProvider<TState>();
             _state = initialState;
             _reducers = reducers;
+            _stateProvider = new StateProvider<TState>(_state);
         }
 
         public void Dispatch<TAction>(TAction action)
@@ -29,7 +27,7 @@ namespace Redux
                 var state = CreateDeepCopy(_state);
                 reducer.Invoke(state, action);
                 _state = state;
-                _stateProvider.OnNext(_state);
+                _stateProvider.Invoke(_state);
             }
         }
 
@@ -38,7 +36,7 @@ namespace Redux
             Dispatch<TAction>(default);
         }
 
-        public IObservable<TPartialState> Select<TPartialState>(Func<TState, TPartialState> selector)
+        public IReduxSelectObservable<TPartialState> Select<TPartialState>(Func<TState, TPartialState> selector)
         {
             return new SelectObservable<TState, TPartialState>(_stateProvider, selector);
         }

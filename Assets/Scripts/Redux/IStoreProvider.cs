@@ -1,4 +1,4 @@
-namespace Redux
+namespace UniRedux.Redux
 {
     public interface IStoreProvider
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Redux
+namespace UniRedux.Redux
 {
     public interface IStateBuilder<TState>
     {

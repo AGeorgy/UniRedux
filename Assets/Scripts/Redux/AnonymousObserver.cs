@@ -1,23 +1,24 @@
 using System;
 
-namespace Redux
+namespace UniRedux.Redux
 {
-    internal class AnonymousObserver<T> : IObserver<T>
+    internal class AnonymousObserver<T> : IReduxObserver<T>
     {
-        private readonly Action<T> _onNext;
+        private readonly Action<T> _action;
 
-        public AnonymousObserver(Action<T> onNext)
+        public AnonymousObserver(Action<T> action)
         {
-            _onNext = onNext;
+            _action = action;
+        }
+        
+        public void Invoke(T value)
+        {
+            ForceInvoke(value);
         }
 
-        public void OnNext(T value)
+        public void ForceInvoke(T value)
         {
-            _onNext(value);
+            _action.Invoke(value);
         }
-
-        public void OnError(Exception error) { }
-
-        public void OnCompleted() { }
     }
 }

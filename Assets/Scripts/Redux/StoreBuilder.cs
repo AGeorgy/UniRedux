@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Redux
+namespace UniRedux.Redux
 {
     public class StoreBuilder
     {

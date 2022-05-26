@@ -1,6 +1,6 @@
 using System;
 
-namespace Redux
+namespace UniRedux.Redux
 {
     public static class GlobalStore
     {
@@ -16,9 +16,14 @@ namespace Redux
             return _storeProvider.GetStore<TStore>();
         }
 
-        public static IObservable<TPartialState> Select<TState, TPartialState>(Func<TState, TPartialState> selector)
+        public static IReduxSelectObservable<TPartialState> Select<TState, TPartialState>(Func<TState, TPartialState> selector)
         {
             return GetStore<TState>()?.Select(selector);
+        }
+
+        public static void Dispatch<TState, TAction>()
+        {
+            GetStore<TState>()?.Dispatch<TAction>();
         }
 
         public static void Dispatch<TState, TAction>(TAction action)
