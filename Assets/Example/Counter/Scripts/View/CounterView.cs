@@ -15,18 +15,22 @@ namespace Example.Counter.Scripts.View
         [SerializeField] private Button _incrementButton;
         [SerializeField] private Button _decrementButton;
         
-        private IDisposable _disposable1, _disposable2;
+        private IDisposable _disposable;
 
         private void Start()
         {
-            _disposable1 = GlobalStore.Select<CounterState, Counter>(CounterSelector).Select(CountSelector)
+            var bag = DisposableBag.CreateBuilder();
+            
+            GlobalStore.Select<CounterState, Counter>(CounterSelector).Select(CountSelector)
             //_disposable = GlobalStore.GetStore<CounterState>().Select(CounterSelector).Select(CountSelector)
                 //.Select(FullCountSelector)
-                .Subscribe(DisplayCount1);
+                .Subscribe(DisplayCount1).AddTo(bag);
             
-            _disposable2 = GlobalStore.GetStore<CounterState>().Select(FullCountSelector)
-                .Subscribe(DisplayCount2);
-
+            GlobalStore.GetStore<CounterState>().Select(FullCountSelector)
+                .Subscribe(DisplayCount2).AddTo(bag);
+            
+            _disposable = bag.Build();
+            
             _incrementButton.onClick.AddListener(OnIncrement);
             _decrementButton.onClick.AddListener(OnDecrement);
         }
@@ -40,8 +44,7 @@ namespace Example.Counter.Scripts.View
 
         private void OnDestroy()
         {
-            _disposable1.Dispose();
-            _disposable2.Dispose();
+            _disposable.Dispose();
             
             _incrementButton.onClick.RemoveAllListeners();
             _decrementButton.onClick.RemoveAllListeners();
