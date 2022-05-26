@@ -10,24 +10,29 @@ namespace Example.Counter.Scripts.View
     public class CounterView : MonoBehaviour
     {
         [SerializeField] private int _decrementValue = 2;
-        [SerializeField] private TextMeshProUGUI _counterText;
+        [SerializeField] private TextMeshProUGUI _counterText1;
+        [SerializeField] private TextMeshProUGUI _counterText2;
         [SerializeField] private Button _incrementButton;
         [SerializeField] private Button _decrementButton;
         
-        private IDisposable _disposable;
+        private IDisposable _disposable1, _disposable2;
 
         private void Start()
         {
-            _disposable = GlobalStore.Select<CounterState, Counter>(CounterSelector).Select(CountSelector)
+            _disposable1 = GlobalStore.Select<CounterState, Counter>(CounterSelector).Select(CountSelector)
             //_disposable = GlobalStore.GetStore<CounterState>().Select(CounterSelector).Select(CountSelector)
                 //.Select(FullCountSelector)
-                .Subscribe(DisplayCount);
+                .Subscribe(DisplayCount1);
+            
+            _disposable2 = GlobalStore.GetStore<CounterState>().Select(FullCountSelector)
+                .Subscribe(DisplayCount2);
 
             _incrementButton.onClick.AddListener(OnIncrement);
             _decrementButton.onClick.AddListener(OnDecrement);
         }
 
-        private void DisplayCount(int count) => _counterText.text = count.ToString();
+        private void DisplayCount1(int count) => _counterText1.text = count.ToString();
+        private void DisplayCount2(int count) => _counterText2.text = count.ToString();
 
         private void OnIncrement() => GlobalStore.Dispatch<CounterState, IncrementAction>();
 
@@ -35,7 +40,8 @@ namespace Example.Counter.Scripts.View
 
         private void OnDestroy()
         {
-            _disposable.Dispose();
+            _disposable1.Dispose();
+            _disposable2.Dispose();
             
             _incrementButton.onClick.RemoveAllListeners();
             _decrementButton.onClick.RemoveAllListeners();

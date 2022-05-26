@@ -15,7 +15,8 @@ namespace Example
             var builder = new StoreBuilder();
             builder
                 .AddState(CounterState.InitialState)
-                .AddReducer<IncrementAction>(CounterIncrementReducer)
+                .AddReducer<IncrementAction>(CounterIncrementReducer1)
+                .AddReducer<IncrementAction>(CounterIncrementReducer2)
                 .AddReducer<DecrementAction>(CounterDecrementReducer)
                 .Build()
 
@@ -28,22 +29,6 @@ namespace Example
 
             var storeProvider = builder.BuildStore();
             GlobalStore.SetStoreProvider(storeProvider);
-            
-            
-            /*return StoreBuilder<AppState>.Create(AppState.InitialState)
-                .StartSubReducer(FilterCounterState) // Counter
-                .AddReducer<IncrementAction>(CounterIncrementReducer)
-                .AddReducer<DecrementAction>(CounterDecrementReducer)
-                .EndSubReducer()
-            
-                .StartSubReducer(FilterToDoState) // ToDo
-                .AddReducer<CreateTodoItemAction, PlayerPrefsService>(CreateToDoItemReducer, playerPrefsService)
-                .AddReducer<RemoveTodoItemAction>(RemoveToDoItemReducer)
-                .AddReducer<CompleteTodoItemAction>(CompleteToDoItemReducer)
-                .AddReducer<ClearTodoItemsAction, PlayerPrefsService>(ClearToDoItemsReducer, playerPrefsService)
-                .EndSubReducer()
-                
-                .Build(out disposable);*/
         }
     }
 }

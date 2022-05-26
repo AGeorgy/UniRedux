@@ -4,7 +4,7 @@
     {
         public static int FullCountSelector(CounterState state)
         {
-            return state.Counter.Count;
+            return state.Count;
         }
         
         public static Counter CounterSelector(CounterState state)

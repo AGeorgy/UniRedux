@@ -30,19 +30,28 @@ namespace UniRedux.Redux
         private class StateBuilder<TState> : IStateBuilder<TState>
         {
             private readonly TState _state;
-            private readonly Dictionary<Type, object> _reducers;
+            private readonly Dictionary<Type, List<object>> _reducers;
             private readonly StoreBuilder _storeBuilder;
 
             public StateBuilder(StoreBuilder storeBuilder, TState initialState)
             {
                 _storeBuilder = storeBuilder;
                 _state = initialState;
-                _reducers = new Dictionary<Type, object>();
+                _reducers = new Dictionary<Type, List<object>>();
             }
 
             public IStateBuilder<TState> AddReducer<TAction>(Action<TState, TAction> reducer)
             {
-                _reducers.Add(typeof(TAction), reducer);
+                var key = typeof(TAction);
+                if (_reducers.ContainsKey(key))
+                {
+                    _reducers[key].Add(reducer);
+                }
+                else
+                {
+                    _reducers.Add(key, new List<object>{reducer});
+                }
+                
                 return this;
             }
 

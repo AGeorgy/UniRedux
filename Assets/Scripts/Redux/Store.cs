@@ -8,11 +8,11 @@ namespace UniRedux.Redux
 {
     public class Store<TState> : IDispatcherSelector<TState>
     {
-        private readonly Dictionary<Type,object> _reducers;
+        private readonly Dictionary<Type, List<object>> _reducers;
         private readonly StateProvider<TState> _stateProvider;
         private TState _state;
 
-        public Store(TState initialState, Dictionary<Type, object> reducers)
+        public Store(TState initialState, Dictionary<Type, List<object>> reducers)
         {
             _state = initialState;
             _reducers = reducers;
@@ -21,13 +21,16 @@ namespace UniRedux.Redux
 
         public void Dispatch<TAction>(TAction action)
         {
-            if (_reducers.TryGetValue(typeof(TAction), out var reducerObject))
+            if (_reducers.TryGetValue(typeof(TAction), out var reducerObjects))
             {
-                var reducer = (Action<TState, TAction>) reducerObject;
-                var state = CreateDeepCopy(_state);
-                reducer.Invoke(state, action);
-                _state = state;
-                _stateProvider.Invoke(_state);
+                foreach (var reducerObject in reducerObjects)
+                {
+                    var reducer = (Action<TState, TAction>) reducerObject;
+                    var state = CreateDeepCopy(_state);
+                    reducer.Invoke(state, action);
+                    _state = state;
+                    _stateProvider.Invoke(_state);
+                }
             }
         }
 
