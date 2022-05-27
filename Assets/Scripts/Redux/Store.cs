@@ -25,9 +25,9 @@ namespace UniRedux.Redux
             {
                 foreach (var reducerObject in reducerObjects)
                 {
-                    var reducer = (Action<TState, TAction>) reducerObject;
+                    var reducer = (IAnonymousHandler<TState, TAction>) reducerObject;
                     var state = CreateDeepCopy(_state);
-                    reducer.Invoke(state, action);
+                    reducer.Handle(state, action);
                     _state = state;
                     _stateProvider.Invoke(_state);
                 }

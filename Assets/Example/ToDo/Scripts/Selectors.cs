@@ -1,34 +1,23 @@
-﻿using System;
-
-namespace Example.ToDo.Scripts
+﻿namespace Example.ToDo.Scripts
 {
     public static class Selectors
     {
-        /*public static TodoItem FilterItemAdded(AppState state)
+        public static TodoItem FilterItemAdded(ToDoState state)
         {
-            return state.ToDo.Items
-                .Select(state => state.ItemAdded)
-                .DistinctUntilChanged()
-                .Where(item => item.Id != Guid.Empty);
+            return state.ItemAdded;
         }
         
-        public static IObservable<TodoItem> FilterItemCompleted(IObservable<AppState> input)
+        public static TodoItem FilterItemCompleted(ToDoState state)
         {
-            return FilterToDoState(input)
-                .Select(state => state.ItemCompleted)
-                .DistinctUntilChanged()
-                .Where(item => item.Id != Guid.Empty);
+            return state.ItemCompleted;
         }
         
-        public static IObservable<TodoItem> FilterItemRemoved(IObservable<AppState> input)
+        public static TodoItem FilterItemRemoved(ToDoState state)
         {
-            return FilterToDoState(input)
-                .Select(state => state.ItemRemoved)
-                .DistinctUntilChanged()
-                .Where(item => item.Id != Guid.Empty);
+            return state.ItemRemoved;
         }
         
-        public static IObservable<Unit> FilterItemsCleared(IObservable<AppState> input)
+        /*public static IObservable<Unit> FilterItemsCleared(IObservable<AppState> input)
         {
             return FilterToDoState(input)
                 .Select(state => state.Items.Count)

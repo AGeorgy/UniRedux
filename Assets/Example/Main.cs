@@ -1,4 +1,5 @@
 ﻿using Example.Counter.Scripts;
+using Example.Services;
 using Example.ToDo.Scripts;
 using UniRedux.Redux;
 using UnityEngine;
@@ -9,8 +10,15 @@ namespace Example
 {
     public static class Initializer
     {
+        private static PlayerPrefsService _playerPrefsService;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Initialize()
+        {
+            _playerPrefsService = new PlayerPrefsService();
+            InitializeRedux();
+        }
+        public static void InitializeRedux()
         {
             var builder = new StoreBuilder();
             builder
@@ -21,10 +29,10 @@ namespace Example
                 .Build()
 
                 .AddState(ToDoState.InitialState)
-                //.AddReducer<CreateTodoItemAction, PlayerPrefsService>(CreateToDoItemReducer, playerPrefsService)
+                .AddReducer<CreateTodoItemAction, PlayerPrefsService>(CreateToDoItemReducer, _playerPrefsService)
                 .AddReducer<RemoveTodoItemAction>(RemoveToDoItemReducer)
                 .AddReducer<CompleteTodoItemAction>(CompleteToDoItemReducer)
-                //.AddReducer<ClearTodoItemsAction, PlayerPrefsService>(ClearToDoItemsReducer, playerPrefsService)
+                .AddReducer<ClearTodoItemsAction, PlayerPrefsService>(ClearToDoItemsReducer, _playerPrefsService)
                 .Build();
 
             var storeProvider = builder.BuildStore();

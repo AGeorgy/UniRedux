@@ -45,13 +45,41 @@ namespace UniRedux.Redux
                 var key = typeof(TAction);
                 if (_reducers.ContainsKey(key))
                 {
-                    _reducers[key].Add(reducer);
+                    _reducers[key].Add(new AnonymousHandler<TState, TAction>(reducer));
                 }
                 else
                 {
-                    _reducers.Add(key, new List<object>{reducer});
+                    _reducers.Add(key, new List<object>{new AnonymousHandler<TState, TAction>(reducer)});
                 }
                 
+                return this;
+            }
+
+            public IStateBuilder<TState> AddReducer<TAction, TService>(Action<TState, TAction, TService> reducer, TService service)
+            {
+                var key = typeof(TAction);
+                if (_reducers.ContainsKey(key))
+                {
+                    _reducers[key].Add(new AnonymousHandler<TState, TAction, TService>(reducer, service));
+                }
+                else
+                {
+                    _reducers.Add(key, new List<object>{new AnonymousHandler<TState, TAction, TService>(reducer, service)});
+                }
+                return this;
+            }
+
+            public IStateBuilder<TState> AddReducer<TAction, TService1, TService2>(Action<TState, TAction, TService1, TService2> reducer, TService1 service1, TService2 service2)
+            {
+                var key = typeof(TAction);
+                if (_reducers.ContainsKey(key))
+                {
+                    _reducers[key].Add(new AnonymousHandler<TState, TAction, TService1, TService2>(reducer, service1, service2));
+                }
+                else
+                {
+                    _reducers.Add(key, new List<object>{new AnonymousHandler<TState, TAction, TService1, TService2>(reducer, service1, service2)});
+                }
                 return this;
             }
 

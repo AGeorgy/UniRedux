@@ -17,7 +17,7 @@
         public TodoItem Item { get; set; }
     }
     
-    /*public struct SetFilterAction
+    public struct SetFilterAction
     {
         public TodoFilter Filter { get; set; }
     }
@@ -31,5 +31,5 @@
     {
         public int Id { get; set; }
         public string Content { get; set; }
-    }*/
+    }
 }
