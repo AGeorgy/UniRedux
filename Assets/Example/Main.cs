@@ -6,18 +6,19 @@ using UnityEngine;
 
 namespace Example
 {
-    public static class Initializer
+    [CreateAssetMenu(fileName = "Initializer", menuName = "_PROJECT/Initializer")]
+    public class Main : ScriptableObject
     {
-        private static PlayerPrefsService _playerPrefsService;
+        [SerializeField] private int _tempInt = 9;
+        private PlayerPrefsService _playerPrefsService;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        public static void Initialize()
+        public void Initialize()
         {
             _playerPrefsService = new PlayerPrefsService();
             InitializeRedux();
         }
 
-        private static void InitializeRedux()
+        private void InitializeRedux()
         {
             var builder = new StoreBuilder();
             CounterBuilder.Build(builder);
