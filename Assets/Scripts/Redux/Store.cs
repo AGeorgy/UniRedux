@@ -23,14 +23,14 @@ namespace UniRedux.Redux
         {
             if (_reducers.TryGetValue(typeof(TAction), out var reducerObjects))
             {
+                var state = CreateDeepCopy(_state);
                 foreach (var reducerObject in reducerObjects)
                 {
                     var reducer = (IAnonymousHandler<TState, TAction>) reducerObject;
-                    var state = CreateDeepCopy(_state);
                     reducer.Handle(state, action);
-                    _state = state;
-                    _stateProvider.Invoke(_state);
                 }
+                _state = state;
+                _stateProvider.Invoke(_state);
             }
         }
 
