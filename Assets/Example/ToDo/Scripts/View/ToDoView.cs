@@ -55,12 +55,12 @@ namespace Example.ToDo.Scripts.View
         {
             var itemView = Instantiate(_toDoItemPrefab, _todoList.content);
             _toDoItemViews.Add(item.Id, itemView);
-            itemView.Model.Value = item;
-            itemView.OnCompleteAsObservable
-                .Subscribe(item => Store.Dispatch(new CompleteTodoItemAction{Item = item}))
+            //itemView.Model.Value = item;
+            /*itemView.OnCompleteAsObservable
+                .Subscribe(item => GlobalStore.GetStore<ToDoState>().Dispatch(new CompleteTodoItemAction{Item = item}))
                 .AddTo(_disposables);
             itemView.OnRemoveAsObservable.Subscribe(item => Store.Dispatch(new RemoveTodoItemAction {Item = item}))
-                .AddTo(_disposables);
+                .AddTo(_disposables);*/
         }
 
         private void OnItemRemoved(TodoItem item)
@@ -72,7 +72,7 @@ namespace Example.ToDo.Scripts.View
         private void OnItemCompleted(TodoItem item)
         {
             var view = _toDoItemViews[item.Id];
-            view.Model.Value = item;
+            //view.Model.Value = item;
         }
 
         /*private void OnItemsCleared()
