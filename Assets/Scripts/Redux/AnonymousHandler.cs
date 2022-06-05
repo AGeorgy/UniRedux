@@ -25,36 +25,37 @@ namespace UniRedux.Redux
     internal class AnonymousHandler<TState, TAction, TService> : IAnonymousHandler<TState, TAction>
     {
         private readonly Action<TState, TAction, TService> _action;
-        private readonly TService _service;
+        private readonly ServiceProvider _serviceProvider;
 
-        public AnonymousHandler(Action<TState, TAction, TService> action, TService service)
+        public AnonymousHandler(Action<TState, TAction, TService> action, ServiceProvider  serviceProvider)
         {
             _action = action;
-            _service = service;
+            _serviceProvider = serviceProvider;
         }
         
         public void Handle(TState value, TAction action)
         {
-            _action.Invoke(value, action, _service);
+            var service = _serviceProvider.Get<TService>();
+            _action.Invoke(value, action, service);
         }
     }
 
     internal class AnonymousHandler<TState, TAction, TService1, TService2> : IAnonymousHandler<TState, TAction>
     {
         private readonly Action<TState, TAction, TService1, TService2> _action;
-        private readonly TService1 _service1;
-        private readonly TService2 _service2;
+        private readonly ServiceProvider _serviceProvider;
 
-        public AnonymousHandler(Action<TState, TAction, TService1, TService2> action, TService1 service1, TService2 service2)
+        public AnonymousHandler(Action<TState, TAction, TService1, TService2> action, ServiceProvider  serviceProvider)
         {
             _action = action;
-            _service1 = service1;
-            _service2 = service2;
+            _serviceProvider = serviceProvider;
         }
         
         public void Handle(TState value, TAction action)
         {
-            _action.Invoke(value, action, _service1, _service2);
+            var service1 = _serviceProvider.Get<TService1>();
+            var service2 = _serviceProvider.Get<TService2>();
+            _action.Invoke(value, action, service1, service2);
         }
     }
 }

@@ -10,19 +10,21 @@ namespace Example
     public class Main : ScriptableObject
     {
         [SerializeField] private int _tempInt = 9;
-        private PlayerPrefsService _playerPrefsService;
 
         public void Initialize()
         {
-            _playerPrefsService = new PlayerPrefsService();
             InitializeRedux();
         }
 
         private void InitializeRedux()
         {
             var builder = new StoreBuilder();
+            builder
+                .AddService(() => new PlayerPrefsService())
+                .AddService(() => (CounterSettings) Resources.Load("CounterSettings"));
+            
             CounterBuilder.Build(builder);
-            ToDoBuilder.Build(builder, _playerPrefsService);
+            ToDoBuilder.Build(builder);
 
             var storeProvider = builder.BuildStore();
             GlobalStore.SetStoreProvider(storeProvider);

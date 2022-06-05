@@ -1,4 +1,5 @@
-﻿using UniRedux.Redux;
+﻿using Example.Services;
+using UniRedux.Redux;
 using static Example.Counter.Scripts.Reducers;
 
 namespace Example.Counter.Scripts
@@ -9,9 +10,9 @@ namespace Example.Counter.Scripts
         {
             builder
                 .AddState(CounterState.InitialState)
-                .AddReducer<IncrementAction>(CounterIncrementReducer1)
+                .AddReducer<IncrementAction, CounterSettings>(CounterIncrementReducer1)
                 .AddReducer<IncrementAction>(CounterIncrementReducer2)
-                .AddReducer<DecrementAction>(CounterDecrementReducer)
+                .AddReducer<DecrementAction, CounterSettings>(CounterDecrementReducer)
                 .Build();
         }
     }

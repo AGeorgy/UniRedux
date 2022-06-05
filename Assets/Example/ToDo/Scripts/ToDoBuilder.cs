@@ -6,14 +6,14 @@ namespace Example.ToDo.Scripts
 {
     public static class ToDoBuilder
     {
-        public static void Build(StoreBuilder builder, PlayerPrefsService playerPrefsService)
+        public static void Build(StoreBuilder builder)
         {
             builder
                 .AddState(ToDoState.InitialState)
-                .AddReducer<CreateTodoItemAction, PlayerPrefsService>(CreateToDoItemReducer, playerPrefsService)
+                .AddReducer<CreateTodoItemAction, PlayerPrefsService>(CreateToDoItemReducer)
                 .AddReducer<RemoveTodoItemAction>(RemoveToDoItemReducer)
                 .AddReducer<CompleteTodoItemAction>(CompleteToDoItemReducer)
-                .AddReducer<ClearTodoItemsAction, PlayerPrefsService>(ClearToDoItemsReducer, playerPrefsService)
+                .AddReducer<ClearTodoItemsAction, PlayerPrefsService>(ClearToDoItemsReducer)
                 .Build();;
         }
     }
