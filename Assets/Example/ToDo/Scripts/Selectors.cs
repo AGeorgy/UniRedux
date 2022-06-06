@@ -1,4 +1,6 @@
-﻿namespace Example.ToDo.Scripts
+﻿using System.Collections.Generic;
+
+namespace Example.ToDo.Scripts
 {
     public static class Selectors
     {
@@ -15,6 +17,11 @@
         public static TodoItem FilterItemRemoved(ToDoState state)
         {
             return state.ItemRemoved;
+        }
+        
+        public static List<TodoItem> FilterItems(ToDoState state)
+        {
+            return state.Items;
         }
         
         /*public static IObservable<Unit> FilterItemsCleared(IObservable<AppState> input)

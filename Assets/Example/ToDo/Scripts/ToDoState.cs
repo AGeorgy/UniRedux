@@ -17,16 +17,16 @@ namespace Example.ToDo.Scripts
             {
                 Filter = TodoFilter.All,
                 Items = new List<TodoItem>(),
-                ItemAdded = TodoItem.Empty,
-                ItemRemoved = TodoItem.Empty,
-                ItemCompleted = TodoItem.Empty
+                ItemCompleted = null,
+                ItemRemoved = null,
+                ItemAdded = null,
             };
 
         private ToDoState() { }
     }
     
     [Serializable]
-    public struct TodoItem
+    public class TodoItem
     {
         public Guid Id { get; set; }
         public string Content { get; set; }
@@ -42,6 +42,14 @@ namespace Example.ToDo.Scripts
         public override string ToString()
         {
             return Id + " ^ " + Content + " ^ " + Completed;
+        }
+
+        public static explicit operator TodoItem(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return default;
+            
+            var props = s.Split(" ^ ");
+            return new TodoItem {Id = Guid.Parse(props[0]), Content = props[1], Completed = Convert.ToBoolean(props[2])};
         }
     }
 

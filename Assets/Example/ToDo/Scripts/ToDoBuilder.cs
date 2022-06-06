@@ -10,6 +10,7 @@ namespace Example.ToDo.Scripts
         {
             builder
                 .AddState(ToDoState.InitialState)
+                .AddReducer<LoadTodoItemsAction, PlayerPrefsService>(LoadToDoItemsReducer)
                 .AddReducer<CreateTodoItemAction, PlayerPrefsService>(CreateToDoItemReducer)
                 .AddReducer<RemoveTodoItemAction>(RemoveToDoItemReducer)
                 .AddReducer<CompleteTodoItemAction>(CompleteToDoItemReducer)

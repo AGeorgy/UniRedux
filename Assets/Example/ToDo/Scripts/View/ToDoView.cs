@@ -22,6 +22,7 @@ namespace Example.ToDo.Scripts.View
         {
             InitActions();
             InitSelectors();
+            GlobalStore.GetStore<ToDoState>().Dispatch<LoadTodoItemsAction>();
         }
 
         private void OnDestroy()
@@ -30,7 +31,7 @@ namespace Example.ToDo.Scripts.View
             _toDoInput.onSubmit.RemoveAllListeners();
             _clearButton.onClick.RemoveAllListeners();
 
-            _disposables.Dispose();
+            _disposables?.Dispose();
         }
 
         private void InitActions()
@@ -43,6 +44,7 @@ namespace Example.ToDo.Scripts.View
         {
             var bag = DisposableBag.CreateBuilder();
             
+            GlobalStore.GetStore<ToDoState>().Select(FilterItems).Subscribe(OnItems).AddTo(bag);
             GlobalStore.GetStore<ToDoState>().Select(FilterItemAdded).Subscribe(OnItemAdded).AddTo(bag);
             GlobalStore.GetStore<ToDoState>().Select(FilterItemRemoved).Subscribe(OnItemRemoved).AddTo(bag);
             GlobalStore.GetStore<ToDoState>().Select(FilterItemCompleted).Subscribe(OnItemCompleted).AddTo(bag);
@@ -51,10 +53,25 @@ namespace Example.ToDo.Scripts.View
             _disposables = bag.Build();
         }
 
+        private void OnItems(List<TodoItem> items)
+        {
+            Debug.Log($"OnItems: {items.Count}");
+            ClearItems();
+            foreach (var item in items)
+            {
+                OnItemAdded(item);
+            }
+        }
+
         private void OnItemAdded(TodoItem item)
         {
-            var itemView = Instantiate(_toDoItemPrefab, _todoList.content);
-            _toDoItemViews.Add(item.Id, itemView);
+            if(item == null) return;
+            if (!_toDoItemViews.ContainsKey(item.Id))
+            {
+                var itemView = Instantiate(_toDoItemPrefab, _todoList.content);
+                _toDoItemViews.Add(item.Id, itemView);
+            }
+            
             //itemView.Model.Value = item;
             /*itemView.OnCompleteAsObservable
                 .Subscribe(item => GlobalStore.GetStore<ToDoState>().Dispatch(new CompleteTodoItemAction{Item = item}))
@@ -65,23 +82,28 @@ namespace Example.ToDo.Scripts.View
 
         private void OnItemRemoved(TodoItem item)
         {
+            if(item == null) return;
+
             _toDoItemViews[item.Id].Destroy();
             _toDoItemViews.Remove(item.Id);
         }
 
         private void OnItemCompleted(TodoItem item)
         {
+            if(item == null) return;
+
             var view = _toDoItemViews[item.Id];
             //view.Model.Value = item;
         }
 
-        /*private void OnItemsCleared()
+        private void ClearItems()
         {
             foreach (var toDoItemView in _toDoItemViews)
             {
                 toDoItemView.Value.Destroy();
             }
-        }*/
+            _toDoItemViews.Clear();
+        }
 
         private void OnAddButton()
         {

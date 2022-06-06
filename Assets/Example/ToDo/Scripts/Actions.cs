@@ -6,6 +6,7 @@
     }
     
     public struct ClearTodoItemsAction { }
+    public struct LoadTodoItemsAction { }
 
     public struct RemoveTodoItemAction
     {

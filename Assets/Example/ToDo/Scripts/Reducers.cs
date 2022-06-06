@@ -14,6 +14,7 @@ namespace Example.ToDo.Scripts
             state.ItemAdded = item;
             
             var storedString = state.Items.Aggregate(string.Empty, (current, todoItem) => current + (todoItem + " ~ "));
+            storedString = storedString.Remove(storedString.Length - 3, 3);
             playerPrefsService.Store(TODO_ITEMS, storedString);
         }
 
@@ -42,6 +43,14 @@ namespace Example.ToDo.Scripts
         {
             state.Items.Clear();
             playerPrefsService.Clear(TODO_ITEMS);
+        }
+
+        public static void LoadToDoItemsReducer(ToDoState state, LoadTodoItemsAction action, PlayerPrefsService playerPrefsService)
+        {
+            state.Items.Clear();
+            var itemsString = playerPrefsService.LoadString(TODO_ITEMS);
+            if(!string.IsNullOrEmpty(itemsString))
+                state.Items = itemsString.Split(" ~ ").ToList().Select(s => (TodoItem) s).ToList();
         }
     }
 }
